@@ -6,7 +6,7 @@
 /*   By: slargo-b <slargo-b@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 19:14:05 by slargo-b          #+#    #+#             */
-/*   Updated: 2025/02/05 21:38:43 by slargo-b         ###   ########.fr       */
+/*   Updated: 2025/02/06 14:49:11 by slargo-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,14 @@
 # include <fcntl.h>
 # include <stdio.h>
 
+
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 2
 # endif
 
 char	*get_next_line(int fd);
-void	ft_memcpy(void *dest, const void *src, size_t n);
-char	ft_strlen(const char *s);
-char	ft_strjoin(char const *s1, char const *s2);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+size_t	ft_strlen(const char *s);
+char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif
