@@ -6,27 +6,26 @@
 /*   By: slargo-b <slargo-b@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 19:28:50 by slargo-b          #+#    #+#             */
-/*   Updated: 2025/02/06 22:01:29 by slargo-b         ###   ########.fr       */
+/*   Updated: 2025/02/08 12:58:02 by slargo-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-// static int	new_line(char *str)
-// {
-// 	int	i;
+static int	new_line(char *str)
+{
+	int	i;
 
-// 	i = 0;
-// 	while (str[i])
-// 	{
-// 		if (str[i] == '\n')
-// 			return (1);
-// 		i++;
-// 	}
-// 	return (0);
-// }
-
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 static char	*get_line(char *save)
 {
@@ -34,11 +33,11 @@ static char	*get_line(char *save)
 	int		i;
 
 	i = 0;
-	if (!save[i])
+	if (!save)
 		return (NULL);
 	while (save[i] && save [i] != '\n')
 		i++;
-	line = malloc (i + 1);
+	line = malloc (i + 2);
 	if (!line)
 		return (NULL);
 	i = 0;
@@ -49,11 +48,34 @@ static char	*get_line(char *save)
 	}
 	if (save[i] == '\n')
 	{
-		line[i] = '\n';
+		line[i] = save [i];
 		i++;
 	}
 	line [i] = '\0';
 	return (line);
+}
+
+static char	*read_and_save(int fd, char *save)
+{
+	char	*buffer;
+	int		read_a;
+
+	read_a = 1;
+	buffer = (char *)malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	while (read_a > 0 && !new_line(save))
+	{
+		read_a = read(fd, buffer, BUFFER_SIZE);
+		if (read_a < 0)
+			return (free(buffer), NULL);
+		buffer[read_a] = '\0';
+		save = ft_strjoin(save, buffer);
+		if (!save)
+			return (free(buffer), NULL);
+	}
+	free(buffer);
+	return (save);
 }
 
 static char	*update_save(char *save)
@@ -66,7 +88,7 @@ static char	*update_save(char *save)
 	j = 0;
 	while (save[i] && save [i] != '\n')
 		i++;
-	if (!save[i])
+	if (!save)
 		return (free(save), NULL);
 	new_save = malloc(ft_strlen(save) - i + 1);
 	if (!new_save)
@@ -86,53 +108,36 @@ static char	*update_save(char *save)
 char	*get_next_line(int fd)
 {
 	static char	*save;
-	char		*buffer;
 	char		*line;
-	int			read_a;
 
-	read_a = 1;
-	if (fd <= 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = (char *)malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return (NULL);
-	save = (char *)malloc(1);
+	save = read_and_save(fd, save);
 	if (!save)
 		return (NULL);
-	while (read_a > 0)
-	{
-		read_a = read(fd, buffer, BUFFER_SIZE);
-		if (read_a < 0)
-			return (free(buffer), NULL);
-		buffer[read_a] = '\0';
-		save = ft_strjoin(save, buffer);
-		if (buffer == NULL)
-			break ;
-	}
-	free(buffer);
 	line = get_line(save);
 	save = update_save(save);
 	return (line);
 }
 
-int	main(void)
-{
-	char	*str;
-	int		fd;
-
-	fd = open("text.txt", O_RDONLY);
-	str = get_next_line(fd);
-	printf("%s", str);
-	str = get_next_line(fd);
-	printf("%s", str);
-	str = get_next_line(fd);
-	printf("%s", str);
-	str = get_next_line(fd);
-	printf("%s", str);
+//int	main(void)
+//{
+//	char	*str;
+//	int		fd;
+//
+//	fd = open("text.txt", O_RDONLY);
+//	str = get_next_line(fd);
+//	printf("%s", str);
+//	str = get_next_line(fd);
+//	printf("%s", str);
+//	str = get_next_line(fd);
+//	printf("%s", str);
+//	str = get_next_line(fd);
+//	printf("%s", str);
 	// while ((str = get_next_line(fd)) != NULL)
 // 	{
 // 		printf("%s", str);
 // 		free (str);
 // 	}
-	close(fd);
-}
+//	close(fd);
+//}

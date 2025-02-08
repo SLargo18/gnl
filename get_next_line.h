@@ -6,7 +6,7 @@
 /*   By: slargo-b <slargo-b@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 19:14:05 by slargo-b          #+#    #+#             */
-/*   Updated: 2025/02/06 14:49:11 by slargo-b         ###   ########.fr       */
+/*   Updated: 2025/02/08 12:35:58 by slargo-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <stdio.h>
-
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 2
