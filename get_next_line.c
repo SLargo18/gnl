@@ -5,15 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: slargo-b <slargo-b@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/05 19:28:50 by slargo-b          #+#    #+#             */
-/*   Updated: 2025/02/08 12:58:02 by slargo-b         ###   ########.fr       */
+/*   Created: 2025/02/10 16:14:17 by slargo-b          #+#    #+#             */
+/*   Updated: 2025/02/10 20:31:57 by slargo-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-static int	new_line(char *str)
+/* static int	new_line(char *str)
 {
 	int	i;
 
@@ -25,7 +25,7 @@ static int	new_line(char *str)
 		i++;
 	}
 	return (0);
-}
+} */
 
 static char	*get_line(char *save)
 {
@@ -61,18 +61,20 @@ static char	*read_and_save(int fd, char *save)
 	int		read_a;
 
 	read_a = 1;
-	buffer = (char *)malloc(BUFFER_SIZE + 1);
+	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
-	while (read_a > 0 && !new_line(save))
+	while (read_a > 0)
 	{
 		read_a = read(fd, buffer, BUFFER_SIZE);
 		if (read_a < 0)
-			return (free(buffer), NULL);
+			return (free(save), free(buffer), NULL);
 		buffer[read_a] = '\0';
 		save = ft_strjoin(save, buffer);
 		if (!save)
 			return (free(buffer), NULL);
+		if (ft_strchr(save, '\n') != NULL)
+			break ;
 	}
 	free(buffer);
 	return (save);
@@ -90,7 +92,7 @@ static char	*update_save(char *save)
 		i++;
 	if (!save)
 		return (free(save), NULL);
-	new_save = malloc(ft_strlen(save) - i + 1);
+	new_save = malloc(ft_strlen(save) - i - 2);
 	if (!new_save)
 		return (NULL);
 	i++;
@@ -112,32 +114,35 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
+	if (!save)
+		save = malloc (1);
 	save = read_and_save(fd, save);
 	if (!save)
 		return (NULL);
 	line = get_line(save);
+	printf("%s\n", line);
 	save = update_save(save);
 	return (line);
 }
 
-//int	main(void)
-//{
-//	char	*str;
-//	int		fd;
-//
-//	fd = open("text.txt", O_RDONLY);
-//	str = get_next_line(fd);
-//	printf("%s", str);
-//	str = get_next_line(fd);
-//	printf("%s", str);
-//	str = get_next_line(fd);
-//	printf("%s", str);
-//	str = get_next_line(fd);
-//	printf("%s", str);
-	// while ((str = get_next_line(fd)) != NULL)
-// 	{
-// 		printf("%s", str);
-// 		free (str);
-// 	}
-//	close(fd);
-//}
+int	main(void)
+{
+	char	*str;
+	int		fd;
+
+	fd = open("text.txt", O_RDONLY);
+	/*str = get_next_line(fd); 
+	printf("%s", str); 
+	 str = get_next_line(fd);
+	printf("%s", str);
+	str = get_next_line(fd);
+	printf("%s", str);
+	str = get_next_line(fd);
+	printf("%s", str); */
+	while ((str = get_next_line(fd)) != NULL)
+ 	{
+ 		printf("%s", str);
+ 		free (str);
+ 	}
+	close(fd);
+}
