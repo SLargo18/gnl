@@ -6,7 +6,7 @@
 /*   By: slargo-b <slargo-b@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 19:01:10 by slargo-b          #+#    #+#             */
-/*   Updated: 2025/02/10 20:29:38 by slargo-b         ###   ########.fr       */
+/*   Updated: 2025/02/12 11:16:40 by slargo-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,18 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	}
 	return (dest);
 }
+
+char	*ft_laquequiera(char *save, char *buffer)
+{
+	char	*rest;
+
+	rest = ft_strjoin(save, buffer);
+	if (!rest)
+		return (NULL);
+	free (save);
+	return (rest);
+}
+
 /* size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
 	unsigned int	a;
@@ -51,21 +63,24 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 		dst[i] = '\0';
 	}
 	return (a);
-}*/
+} */
 
 char	*ft_strchr(const char *s, int c)
 {
-	while (*s != '\0')
+	int	i;
+
+	i = 0;
+	while (s[i])
 	{
-		if (*s == (char)c)
+		if ((char)c == s[i])
 		{
-			return ((char *)s);
+			return ((char *)(s + i));
 		}
-		s++;
+		i++;
 	}
 	if ((char)c == '\0')
 	{
-		return ((char *)s);
+		return ((char *)(s + i));
 	}
 	return (NULL);
 }
@@ -75,12 +90,14 @@ int	ft_strlen(const char *s)
 	int	i;
 
 	i = 0;
+	if (!s)
+		return (0);
 	while (s[i])
 		i++;
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
 	char	*str;
 	size_t	len1;
