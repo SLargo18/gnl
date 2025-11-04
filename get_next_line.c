@@ -11,21 +11,28 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-/* static int	new_line(char *str)
+static char	*update_save(char *save)
 {
-	int	i;
+	char	*new_save;
+	int		i;
+	int		j;
 
 	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\n')
-			return (1);
+	while (save && save[i] && save[i] != '\n')
 		i++;
-	}
-	return (0);
-} */
+	if (save && !save[i])
+		return (free(save), NULL);
+	new_save = malloc(ft_strlen(save) - i + 1);
+	if (!new_save)
+		return (NULL);
+	i++;
+	j = 0;
+	while (save && save[i])
+		new_save[j++] = save[i++];
+	new_save[j] = '\0';
+	return (free(save), new_save);
+}
 
 static char	*get_line(char *save)
 {
@@ -35,22 +42,22 @@ static char	*get_line(char *save)
 	i = 0;
 	if (!save)
 		return (NULL);
-	while (save[i] && save [i] != '\n')
+	while (save[i] && save[i] != '\n')
 		i++;
-	if (save [i] == '\n')
+	if (save[i] == '\n')
 		i++;
-	line = malloc(i + 1);
+	line = malloc((i + 1) * sizeof(char));
 	if (!line)
 		return (NULL);
 	i = 0;
 	while (save[i] && save[i] != '\n')
 	{
-		line[i] = save [i];
+		line[i] = save[i];
 		i++;
 	}
 	if (save[i] == '\n')
 		line[i++] = '\n';
-	line [i] = '\0';
+	line[i] = '\0';
 	return (line);
 }
 
@@ -67,50 +74,24 @@ static char	*read_and_save(int fd, char *save)
 	{
 		read_a = read(fd, buffer, BUFFER_SIZE);
 		if (read_a <= 0)
-			return (free(buffer), save);
+			break ;
 		buffer[read_a] = '\0';
-		save = ft_laquequiera(save, buffer);
+		save = ft_strjoin_gnl(save, buffer);
 		if (!save)
 			return (free(buffer), NULL);
-		if (ft_strchr(save, '\n'))
+		if (has_newline(save))
 			break ;
 	}
-	free(buffer);
-	return (save);
-}
-
-static char	*update_save(char *save)
-{
-	char	*new_save;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	while (save && save[i] && save [i] != '\n')
-		i++;
-	if (save && !save[i])
-		return (free(save), NULL);
-	new_save = malloc (ft_strlen(save) - i + 1);
-	if (!new_save)
-		return (NULL);
-	i++;
-	while (save && save[i])
-		new_save[j++] = save [i++];
-	new_save[j] = '\0';
-	free(save);
-	return (new_save);
+	return (free(buffer), save);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*save;
-	char		*line;
+	char			*line;
+	static char		*save;
 
 	if (fd < 0 || BUFFER_SIZE < 0)
 		return (NULL);
-	if (!save)
-		save = NULL;
 	save = read_and_save(fd, save);
 	if (!save)
 		return (NULL);
@@ -120,7 +101,6 @@ char	*get_next_line(int fd)
 	save = update_save(save);
 	return (line);
 }
-
 /* int	main(void)
 {
 	char	*str;

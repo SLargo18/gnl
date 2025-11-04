@@ -1,27 +1,21 @@
-int main() {
-    int fd;
-    char *line = NULL;
+#include "get_next_line.h"
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-    // Abre un archivo para obtener un descriptor de archivo válido
-    fd = open("test.txt", O_RDONLY);
-    if (fd == -1) {
-        perror("Error abriendo el archivo");
-        return 1;
-    }
+int	main()
+{
+	char	*str;
+	int		fd;
+	int i = 1;
 
-    // Llama a tu función gnl con el descriptor de archivo válido y un puntero a texto NULL
-    char *result = get_next_line(fd);
-
-    // Maneja el resultado de la llamada a gnl
-    if (result == NULL) {
-        perror("Error en gnl");
-    } else {
-        printf("Línea leída: %s\n", line);
-    }
-
-    // Libera la memoria y cierra el archivo
-    free(line);
-    close(fd);
-
-    return 0;
+	fd = open("prueba.txt", O_RDONLY);
+	while ((str = get_next_line(fd)) != NULL)
+	{
+		printf("<%d> %s", i++, str);
+		free (str);
+	}
+	free (str);
+	close(fd);
+	return 0;
 }

@@ -12,6 +12,29 @@
 
 #include "get_next_line.h"
 
+int	has_newline(char *buffer)
+{
+	while (*buffer)
+	{
+		if (*buffer == '\n')
+			return (1);
+		buffer++;
+	}
+	return (0);
+}
+
+int	ft_strlen(const char *s)
+{
+	int	i;
+
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i])
+		i++;
+	return (i);
+}
+
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	unsigned char	*a;
@@ -31,7 +54,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-char	*ft_laquequiera(char *save, char *buffer)
+char	*ft_strjoin_gnl(char *save, char *buffer)
 {
 	char	*rest;
 
@@ -40,61 +63,6 @@ char	*ft_laquequiera(char *save, char *buffer)
 		return (NULL);
 	free (save);
 	return (rest);
-}
-
-/* size_t	ft_strlcpy(char *dst, const char *src, size_t size)
-{
-	unsigned int	a;
-	unsigned int	i;
-
-	a = 0;
-	i = 0;
-	while (src[a] != '\0')
-	{
-		a++;
-	}
-	if (size > 0)
-	{
-		while (i < (size - 1) && (src[i] != '\0'))
-		{
-			dst[i] = src[i];
-			i++;
-		}
-		dst[i] = '\0';
-	}
-	return (a);
-} */
-
-char	*ft_strchr(const char *s, int c)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if ((char)c == s[i])
-		{
-			return ((char *)(s + i));
-		}
-		i++;
-	}
-	if ((char)c == '\0')
-	{
-		return ((char *)(s + i));
-	}
-	return (NULL);
-}
-
-int	ft_strlen(const char *s)
-{
-	int	i;
-
-	i = 0;
-	if (!s)
-		return (0);
-	while (s[i])
-		i++;
-	return (i);
 }
 
 char	*ft_strjoin(const char *s1, const char *s2)
@@ -113,14 +81,3 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	str[len1 + len2] = '\0';
 	return (str);
 }
-//  int main ()
-// {
-// 	char *aqui;
-// 	char	*a;
-// 	char	*b;
-
-// 	a = "hola";
-//  	// b = "como";
-// 	// aqui = ft_strjoin(a, b);
-// 	printf("%s\n", ft_strchr(a, 'o'));
-// }
