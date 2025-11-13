@@ -14,7 +14,7 @@ int	main()
 	{
 		printf("<%d> %s", i++, str);
 		free (str);
-	}
+	}	
 	free (str);
 	close(fd);
 	return 0;

@@ -90,7 +90,7 @@ char	*get_next_line(int fd)
 	char			*line;
 	static char		*save;
 
-	if (fd < 0 || BUFFER_SIZE < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	save = read_and_save(fd, save);
 	if (!save)
@@ -99,25 +99,20 @@ char	*get_next_line(int fd)
 	if (!line)
 		return (free(save), NULL);
 	save = update_save(save);
+	if (!save && !line[0])
+		return (free(line), NULL);
 	return (line);
 }
-/* int	main(void)
+/* int	main(int argc, char *argv[])
 {
 	char	*str;
 	int		fd;
-
-	fd = open("text.txt", O_RDONLY);
-	// str = get_next_line(fd); 
-	// printf("%s", str); 
-	//  str = get_next_line(fd);
-	// printf("%s", str);
-	// str = get_next_line(fd);
-	// printf("%s", str);
-	// str = get_next_line(fd);
-	// printf("%s", str);
+    (void)argc;
+	(void)argv;
+	fd = open("prueba.txt", O_RDONLY);
 	while ((str = get_next_line(fd)) != NULL)
  	{
- 		printf("%s\n", str);
+ 		printf("%s", str);
  		free (str);
  	}
 	close(fd);
